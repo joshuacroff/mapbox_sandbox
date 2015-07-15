@@ -1,0 +1,28 @@
+
+$(document).ready(function() {
+  getObjects();
+
+  L.mapbox.accessToken = "<%= ENV['MAPBOX_TOKEN'] %>";
+  var map = L.mapbox.map('map', 'mapbox.streets', { zoomControl: true }).setView([37.7833, -122.4167], 12);
+
+});
+
+function getObjects() {
+
+   var request = $.ajax({
+    url: "/home/sfdata",
+    type: "get",
+    dataType: "json"
+  })
+
+  request.done(function(response){
+    console.log(response);
+  })
+
+  request.fail(function(response){
+    console.log("failure");
+    console.log(response);
+  })
+}
+
+
