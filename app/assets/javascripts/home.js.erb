@@ -1,28 +1,55 @@
-
 $(document).ready(function() {
-  getObjects();
 
   L.mapbox.accessToken = "<%= ENV['MAPBOX_TOKEN'] %>";
   var map = L.mapbox.map('map', 'mapbox.streets', { zoomControl: true }).setView([37.7833, -122.4167], 12);
-
-});
-
-function getObjects() {
 
    var request = $.ajax({
     url: "/home/sfdata",
     type: "get",
     dataType: "json"
-  })
+    })
 
-  request.done(function(response){
-    console.log(response);
-  })
+    request.done(function(response){
+      var sfBikeRackLocations = response;
 
-  request.fail(function(response){
-    console.log("failure");
-    console.log(response);
-  })
-}
+      var geojson = sfBikeRackLocations.map(function(bikeRack){
+        var reformObject = {};
+        reformObject["type"] = "Feature";
+        reformObject["properties"] = {
+          "marker-color": "#3bb2d0",
+          "marker-size": "small"
+        }
+        reformObject["geometry"] = bikeRack["latitude"];
+        return reformObject;
+      })
+      var myFeatures = L.mapbox.featureLayer().setGeoJSON(geojson).addTo(map);
+
+    });
+
+    request.fail(function(response){
+      console.log("failure");
+      console.log(response);
+    })
+
+
+  // var geojson = [
+  //   {
+  //     "type": "Feature",
+  //     "geometry": {
+  //       "type": "Point",
+  //       "coordinates": [-77.031952,38.913184]
+  //     }
+  //   },
+  //   {
+  //     "type": "Feature",
+  //     "geometry": {
+  //       "type": "Point",
+  //       "coordinates": [-122.413682,37.775408]
+  //     }
+  //   }
+  // ];
+
+});
+
 
 
