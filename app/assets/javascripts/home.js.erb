@@ -34,18 +34,16 @@ $(document).ready(function() {
           "marker-size": "small"
         }
         reformObject["geometry"] = bikeRack["latitude"];
+        reformObject["addr_num"] = bikeRack["addr_num"];
+        reformObject["street_name"] = bikeRack["street_name"];
         return reformObject;
-      })
-      var myFeatures = L.mapbox.featureLayer().setGeoJSON(geojson).addTo(map);
-
-    });
-
-    request.fail(function(response){
-      console.log("failure");
-      console.log(response);
     })
+    return reformGeojson;
+  }
 
+});
 
+  // geojson format example
   // var geojson = [
   //   {
   //     "type": "Feature",
