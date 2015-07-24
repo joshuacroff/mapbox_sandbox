@@ -10,9 +10,23 @@ $(document).ready(function() {
     })
 
     request.done(function(response){
-      var sfBikeRackLocations = response;
+      var geojson = reformatGeojson(response);
+      var myFeatures = L.mapbox.featureLayer(geojson).addTo(map);
+      myFeatures.eachLayer(function(layer) {
+        var content = '<h2>SF Bike Racks<\/h2>' +
+        '<p>Location: ' + layer.feature.addr_num+ '<br \/>' +
+        'Street: ' + layer.feature.street_name + '<\/p>';
+        layer.bindPopup(content);
+      });
+    });
 
-      var geojson = sfBikeRackLocations.map(function(bikeRack){
+    request.fail(function(response){
+      console.log("failure");
+      console.log(response);
+    })
+
+  function reformatGeojson(geojson){
+    var reformGeojson = geojson.map(function(bikeRack){
         var reformObject = {};
         reformObject["type"] = "Feature";
         reformObject["properties"] = {
@@ -48,8 +62,4 @@ $(document).ready(function() {
   //     }
   //   }
   // ];
-
-});
-
-
 
